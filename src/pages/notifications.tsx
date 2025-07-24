@@ -147,7 +147,7 @@ export default function NotificationsPage() {
               >
                 <Card
                   className={cn(
-                    "bg-background border-none shadow-none px-0 py-0",
+                    "bg-background border-none shadow-none px-0 py-0  transition hover:bg-accent hover:shadow",
                     n.isRead ? "opacity-60" : ""
                   )}
                 >
