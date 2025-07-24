@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 const notifications = [
   {
@@ -134,48 +135,51 @@ export default function NotificationsPage() {
         Notifications
       </h1>
       <ul className="space-y-2">
-        {notifications.map((n) => (
-          <li key={n.id}>
-            <button
-              className="w-full text-left focus:outline-none cursor-pointer"
-              onClick={() => {
-                setSelected(n);
-                setOpen(true);
-              }}
-            >
-              <Card
-                className={cn(
-                  "bg-background border-none shadow-none px-0 py-0",
-                  n.isRead ? "opacity-60" : ""
-                )}
+        {notifications.map((n, i) => (
+          <React.Fragment key={n.id}>
+            <li>
+              <button
+                className="w-full text-left focus:outline-none cursor-pointer"
+                onClick={() => {
+                  setSelected(n);
+                  setOpen(true);
+                }}
               >
-                <CardContent className="flex flex-col gap-1 px-4 py-3">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-base line-clamp-1">
-                      {n.title}
+                <Card
+                  className={cn(
+                    "bg-background border-none shadow-none px-0 py-0",
+                    n.isRead ? "opacity-60" : ""
+                  )}
+                >
+                  <CardContent className="flex flex-col gap-1 px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <span className="font-medium text-base line-clamp-1">
+                        {n.title}
+                      </span>
+                      {!n.isRead && (
+                        <Badge
+                          variant="outline"
+                          className="ml-2 px-2 py-0.5 text-xs border-primary text-primary bg-transparent"
+                        >
+                          New
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-sm text-muted-foreground line-clamp-2">
+                      {n.body}
                     </span>
-                    {!n.isRead && (
-                      <Badge
-                        variant="outline"
-                        className="ml-2 px-2 py-0.5 text-xs border-primary text-primary bg-transparent"
-                      >
-                        New
-                      </Badge>
-                    )}
-                  </div>
-                  <span className="text-sm text-muted-foreground line-clamp-2">
-                    {n.body}
-                  </span>
-                  <span className="text-xs text-zinc-400 mt-1">
-                    {new Date(n.createdAt).toLocaleString("en-US", {
-                      dateStyle: "medium",
-                      timeStyle: "short",
-                    })}
-                  </span>
-                </CardContent>
-              </Card>
-            </button>
-          </li>
+                    <span className="text-xs text-zinc-400 mt-1">
+                      {new Date(n.createdAt).toLocaleString("en-US", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </span>
+                  </CardContent>
+                </Card>
+              </button>
+            </li>
+            {i < notifications.length - 1 && <Separator className="my-2" />}
+          </React.Fragment>
         ))}
       </ul>
       <Dialog open={open} onOpenChange={setOpen}>
