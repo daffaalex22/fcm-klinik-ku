@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const notifications = [
@@ -117,6 +124,10 @@ const notifications = [
 ];
 
 export default function NotificationsPage() {
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState<null | typeof notifications[number]>(
+    null
+  );
   return (
     <main className="max-w-lg mx-auto py-10 px-4">
       <h1 className="text-2xl font-semibold mb-8 tracking-tight">
@@ -125,40 +136,68 @@ export default function NotificationsPage() {
       <ul className="space-y-2">
         {notifications.map((n) => (
           <li key={n.id}>
-            <Card
-              className={cn(
-                "bg-background border-none shadow-none px-0 py-0",
-                n.isRead ? "opacity-60" : ""
-              )}
+            <button
+              className="w-full text-left focus:outline-none cursor-pointer"
+              onClick={() => {
+                setSelected(n);
+                setOpen(true);
+              }}
             >
-              <CardContent className="flex flex-col gap-1 px-4 py-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium text-base line-clamp-1">
-                    {n.title}
+              <Card
+                className={cn(
+                  "bg-background border-none shadow-none px-0 py-0",
+                  n.isRead ? "opacity-60" : ""
+                )}
+              >
+                <CardContent className="flex flex-col gap-1 px-4 py-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-base line-clamp-1">
+                      {n.title}
+                    </span>
+                    {!n.isRead && (
+                      <Badge
+                        variant="outline"
+                        className="ml-2 px-2 py-0.5 text-xs border-primary text-primary bg-transparent"
+                      >
+                        New
+                      </Badge>
+                    )}
+                  </div>
+                  <span className="text-sm text-muted-foreground line-clamp-2">
+                    {n.body}
                   </span>
-                  {!n.isRead && (
-                    <Badge
-                      variant="outline"
-                      className="ml-2 px-2 py-0.5 text-xs border-primary text-primary bg-transparent"
-                    >
-                      New
-                    </Badge>
-                  )}
-                </div>
-                <span className="text-sm text-muted-foreground line-clamp-2">
-                  {n.body}
-                </span>
-                <span className="text-xs text-zinc-400 mt-1">
-                  {new Date(n.createdAt).toLocaleString("en-US", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                  })}
-                </span>
-              </CardContent>
-            </Card>
+                  <span className="text-xs text-zinc-400 mt-1">
+                    {new Date(n.createdAt).toLocaleString("en-US", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
+                </CardContent>
+              </Card>
+            </button>
           </li>
         ))}
       </ul>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{selected?.title || "Notification Details"}</DialogTitle>
+          </DialogHeader>
+          <div className="py-2">
+            <p className="mb-4">
+              {selected?.body || "This is a dummy dialog. You can put more details here."}
+            </p>
+            <div className="flex justify-end">
+              <Button
+                className="mt-2"
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
