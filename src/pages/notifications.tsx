@@ -133,9 +133,17 @@ export default function NotificationsPage() {
     null
   );
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
+  const [page, setPage] = useState(1);
+  const pageSize = 5;
   const filteredNotifications = showUnreadOnly
     ? notifications.filter((n) => !n.isRead)
     : notifications;
+  const pageCount = Math.ceil(filteredNotifications.length / pageSize);
+  const paginatedNotifications = filteredNotifications.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
   return (
     <main className="max-w-lg mx-auto py-10 px-4 relative">
       <div className="flex items-center justify-between mb-6">
@@ -158,7 +166,7 @@ export default function NotificationsPage() {
         </div>
       </div>
       <ul className="space-y-2">
-        {filteredNotifications.map((n, i) => (
+        {paginatedNotifications.map((n, i) => (
           <React.Fragment key={n.id}>
             <li>
               <button
@@ -205,6 +213,26 @@ export default function NotificationsPage() {
           </React.Fragment>
         ))}
       </ul>
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-center gap-4 mt-6">
+        <Button
+          className="cursor-pointer"
+          disabled={page === 1}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+        >
+          Previous
+        </Button>
+        <span className="text-sm text-muted-foreground">
+          Page {page} of {pageCount}
+        </span>
+        <Button
+          className="cursor-pointer"
+          disabled={page === pageCount || pageCount === 0}
+          onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+        >
+          Next
+        </Button>
+      </div>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
