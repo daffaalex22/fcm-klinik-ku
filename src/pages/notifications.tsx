@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 
 const notifications = [
   {
@@ -129,13 +130,32 @@ export default function NotificationsPage() {
   const [selected, setSelected] = useState<null | typeof notifications[number]>(
     null
   );
+  const [showUnreadOnly, setShowUnreadOnly] = useState(false);
+  const filteredNotifications = showUnreadOnly
+    ? notifications.filter((n) => !n.isRead)
+    : notifications;
   return (
     <main className="max-w-lg mx-auto py-10 px-4">
-      <h1 className="text-2xl font-semibold mb-8 tracking-tight">
-        Notifications
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Notifications
+        </h1>
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="unread-only"
+            className="text-sm select-none cursor-pointer"
+          >
+            Unread only
+          </label>
+          <Switch
+            id="unread-only"
+            checked={showUnreadOnly}
+            onCheckedChange={setShowUnreadOnly}
+          />
+        </div>
+      </div>
       <ul className="space-y-2">
-        {notifications.map((n, i) => (
+        {filteredNotifications.map((n, i) => (
           <React.Fragment key={n.id}>
             <li>
               <button
