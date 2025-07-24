@@ -1,12 +1,15 @@
 import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const notifications = [
   {
     id: 28,
     clinicId: 28,
-    title: "QWEWEF",
-    body: "EWEWGE",
-    targe: null,
+    title: "Appointment Reminder",
+    body: "You have an appointment scheduled for tomorrow at 10:00 AM.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T00:16:18.478Z",
@@ -15,9 +18,9 @@ const notifications = [
   {
     id: 29,
     clinicId: 28,
-    title: "qqqq",
-    body: "qqqqqqqq",
-    targe: null,
+    title: "Lab Results Ready",
+    body: "Your recent lab results are now available. Please check your patient portal.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T00:25:28.730Z",
@@ -26,9 +29,9 @@ const notifications = [
   {
     id: 30,
     clinicId: 28,
-    title: "ASFSDDSG",
-    body: "S",
-    targe: null,
+    title: "Prescription Update",
+    body: "Your prescription for Amoxicillin has been updated.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T00:35:28.151Z",
@@ -37,9 +40,9 @@ const notifications = [
   {
     id: 31,
     clinicId: 28,
-    title: "dvdsvds",
-    body: "dsvsdv",
-    targe: null,
+    title: "New Message from Doctor",
+    body: "Dr. Smith has sent you a new message regarding your recent visit.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T01:01:56.724Z",
@@ -48,9 +51,9 @@ const notifications = [
   {
     id: 32,
     clinicId: 28,
-    title: "ini testing",
-    body: "testing",
-    targe: null,
+    title: "Follow-up Required",
+    body: "A follow-up appointment is recommended. Please schedule at your convenience.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T06:41:46.604Z",
@@ -59,9 +62,9 @@ const notifications = [
   {
     id: 33,
     clinicId: 28,
-    title: "asvdsvd",
-    body: "qqqqqqqqqqqqqq",
-    targe: null,
+    title: "Insurance Information Needed",
+    body: "Please update your insurance information before your next visit.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T08:04:23.732Z",
@@ -70,9 +73,9 @@ const notifications = [
   {
     id: 34,
     clinicId: 28,
-    title: "ini baru",
-    body: "baru baru",
-    targe: null,
+    title: "Clinic Holiday Notice",
+    body: "The clinic will be closed on July 30th for a public holiday.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T08:04:43.246Z",
@@ -81,9 +84,9 @@ const notifications = [
   {
     id: 35,
     clinicId: 28,
-    title: "1111111",
-    body: "11111111111",
-    targe: null,
+    title: "Payment Received",
+    body: "Your payment for the last visit has been received. Thank you!",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T08:07:45.948Z",
@@ -92,9 +95,9 @@ const notifications = [
   {
     id: 36,
     clinicId: 28,
-    title: "222222222222",
-    body: "22222222222",
-    targe: null,
+    title: "Vaccination Reminder",
+    body: "It is time for your annual flu vaccination. Book your slot now.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T08:08:02.782Z",
@@ -103,9 +106,9 @@ const notifications = [
   {
     id: 37,
     clinicId: 28,
-    title: "2223333333333",
-    body: "33333333333333",
-    targe: null,
+    title: "Profile Update Successful",
+    body: "Your profile information has been updated successfully.",
+    target: null,
     targetId: null,
     isRead: false,
     createdAt: "2025-07-24T08:14:19.187Z",
@@ -115,26 +118,44 @@ const notifications = [
 
 export default function NotificationsPage() {
   return (
-    <main className="max-w-xl mx-auto py-10 px-4">
-      <h1 className="text-2xl font-bold mb-6">Notifications</h1>
-      <ul className="space-y-3">
+    <main className="max-w-lg mx-auto py-10 px-4">
+      <h1 className="text-2xl font-semibold mb-8 tracking-tight">
+        Notifications
+      </h1>
+      <ul className="space-y-2">
         {notifications.map((n) => (
-          <li
-            key={n.id}
-            className={`rounded-lg border px-4 py-3 flex flex-col gap-1 transition bg-white dark:bg-zinc-900 ${
-              n.isRead ? "opacity-60" : "border-primary/60 shadow-md"
-            }`}
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-medium text-base">{n.title}</span>
-              {!n.isRead && (
-                <span className="ml-2 inline-block w-2 h-2 rounded-full bg-primary" title="Unread" />
+          <li key={n.id}>
+            <Card
+              className={cn(
+                "bg-background border-none shadow-none px-0 py-0",
+                n.isRead ? "opacity-60" : ""
               )}
-            </div>
-            <span className="text-sm text-zinc-500 dark:text-zinc-400">{n.body}</span>
-            <span className="text-xs text-zinc-400 mt-1">
-              {new Date(n.createdAt).toLocaleString()}
-            </span>
+            >
+              <CardContent className="flex flex-col gap-1 px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-base line-clamp-1">
+                    {n.title}
+                  </span>
+                  {!n.isRead && (
+                    <Badge
+                      variant="outline"
+                      className="ml-2 px-2 py-0.5 text-xs border-primary text-primary bg-transparent"
+                    >
+                      New
+                    </Badge>
+                  )}
+                </div>
+                <span className="text-sm text-muted-foreground line-clamp-2">
+                  {n.body}
+                </span>
+                <span className="text-xs text-zinc-400 mt-1">
+                  {new Date(n.createdAt).toLocaleString("en-US", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </span>
+              </CardContent>
+            </Card>
           </li>
         ))}
       </ul>
