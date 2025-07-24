@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { Megaphone } from "lucide-react";
+import { toast } from "sonner";
 
 const notifications = [
   {
@@ -135,7 +137,7 @@ export default function NotificationsPage() {
     ? notifications.filter((n) => !n.isRead)
     : notifications;
   return (
-    <main className="max-w-lg mx-auto py-10 px-4">
+    <main className="max-w-lg mx-auto py-10 px-4 relative">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">
           Notifications
@@ -213,7 +215,7 @@ export default function NotificationsPage() {
             </p>
             <div className="flex justify-end">
               <Button
-                className="mt-2"
+                className="mt-2 cursor-pointer"
                 onClick={() => setOpen(false)}
               >
                 Close
@@ -222,6 +224,16 @@ export default function NotificationsPage() {
           </div>
         </DialogContent>
       </Dialog>
+      {/* Floating Test Notif Button */}
+      <Button
+        className="sticky bottom-6 right-6 float-right z-50 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center cursor-pointer"
+        onClick={() => {
+          toast.success("Test notification triggered!");
+        }}
+        aria-label="Test Notification"
+      >
+        <Megaphone size={28} />
+      </Button>
     </main>
   );
 }
