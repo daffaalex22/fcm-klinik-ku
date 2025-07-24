@@ -150,6 +150,7 @@ export default function NotificationsPage() {
             Unread only
           </label>
           <Switch
+            className="hover:cursor-pointer"
             id="unread-only"
             checked={showUnreadOnly}
             onCheckedChange={setShowUnreadOnly}
