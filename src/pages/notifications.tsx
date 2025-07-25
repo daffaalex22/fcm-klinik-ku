@@ -135,9 +135,15 @@ export default function NotificationsPage() {
   const [showUnreadOnly, setShowUnreadOnly] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 5;
+  const sortedNotifications = notifications
+    .slice()
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
   const filteredNotifications = showUnreadOnly
-    ? notifications.filter((n) => !n.isRead)
-    : notifications;
+    ? sortedNotifications.filter((n) => !n.isRead)
+    : sortedNotifications;
   const pageCount = Math.ceil(filteredNotifications.length / pageSize);
   const paginatedNotifications = filteredNotifications.slice(
     (page - 1) * pageSize,
