@@ -94,7 +94,6 @@ const useNotification = () => {
     const setupListener = async () => {
       if (!token) return;
 
-      console.log(`Registered with token ${token}`);
       const m = await messaging();
       if (!m) return;
 
@@ -115,11 +114,11 @@ const useNotification = () => {
           }
         );
 
-        // --------------------------------------------
         // Native Notification
         const n = new Notification(
           payload.notification?.title || "Notif Title",
           {
+            icon: payload.notification?.icon || "/favicon.ico",
             body: payload.notification?.body || "This is a new notif",
           }
         );
@@ -128,7 +127,6 @@ const useNotification = () => {
           event.preventDefault();
           router.push("/notifications");
         };
-        // --------------------------------------------
       });
 
       return unsubscribe;

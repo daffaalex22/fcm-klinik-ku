@@ -17,6 +17,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 import useNotification from "@/hooks/use-notification";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useRouter } from "next/router";
 
 interface Notification {
   id: string;
@@ -29,6 +30,7 @@ interface Notification {
 
 export default function NotificationsPage() {
   const queryClient = useQueryClient();
+  const router = useRouter();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notifications", { page: 1, limit: 100 }],
     queryFn: async () => {
@@ -88,9 +90,6 @@ export default function NotificationsPage() {
       if (!res.ok) throw new Error("Failed to send notification");
       return res.json();
     },
-    // onSuccess: () => {
-    //   toast.success("Notification sent!");
-    // },
     onError: () => {
       toast.error("Failed to send notification");
     },
@@ -183,6 +182,7 @@ export default function NotificationsPage() {
                       }
                       setSelected(n);
                       setOpen(true);
+                      router.push(`/notifications?id=${n.id}`);
                     }}
                   >
                     <Card
@@ -242,7 +242,12 @@ export default function NotificationsPage() {
           Next
         </Button>
       </div>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(open) => {
+        setOpen(open);
+        if (!open) {
+          router.push("/notifications");
+        }
+      }}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>
