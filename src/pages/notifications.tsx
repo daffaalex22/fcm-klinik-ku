@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Megaphone } from "lucide-react";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Notification {
@@ -26,6 +26,7 @@ interface Notification {
 }
 
 export default function NotificationsPage() {
+  const queryClient = useQueryClient();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notifications", { page: 1, limit: 100 }],
     queryFn: async () => {
@@ -40,6 +41,27 @@ export default function NotificationsPage() {
       if (!res.ok) throw new Error("Failed to fetch notifications");
       const json = await res.json();
       return json.data.notification;
+    },
+  });
+
+  const markReadMutation = useMutation({
+    mutationFn: async (notificationId: string) => {
+      const token = localStorage.getItem("accessToken");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/notification/mark-read/${notificationId}`,
+        {
+          method: "PATCH",
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+      );
+      if (!res.ok) throw new Error("Failed to mark notification as read");
+      return res.json();
+    },
+    onMutate: (notificationId: string) => {
+      queryClient.setQueryData(["notifications", { page: 1, limit: 100 }], (old: Notification[] | undefined) => {
+        if (!old) return old;
+        return old.map(n => n.id === notificationId ? { ...n, isRead: true } : n);
+      });
     },
   });
 
@@ -114,6 +136,9 @@ export default function NotificationsPage() {
                   <button
                     className="w-full text-left focus:outline-none cursor-pointer"
                     onClick={() => {
+                      if (!n.isRead) {
+                        markReadMutation.mutate(n.id);
+                      }
                       setSelected(n);
                       setOpen(true);
                     }}
