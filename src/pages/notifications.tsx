@@ -15,6 +15,8 @@ import { Megaphone } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
+import useNotification from "@/hooks/use-notification";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Notification {
   id: string;
@@ -65,6 +67,35 @@ export default function NotificationsPage() {
     },
   });
 
+  // Mutation for sending notification
+  const sendNotifMutation = useMutation({
+    mutationFn: async () => {
+      const token = localStorage.getItem("accessToken");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/notification/send`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            title: "Pasien Dini udah lama ga kontrol KB!",
+            body: "Yuk, kasih pengingat ke Bu Dini supaya ga lupa kontrol KB. Cuma butuh beberapa detik!",
+          }),
+        }
+      );
+      if (!res.ok) throw new Error("Failed to send notification");
+      return res.json();
+    },
+    // onSuccess: () => {
+    //   toast.success("Notification sent!");
+    // },
+    onError: () => {
+      toast.error("Failed to send notification");
+    },
+  });
+
   const notifications = data || [];
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<null | typeof notifications[number]>(
@@ -90,8 +121,19 @@ export default function NotificationsPage() {
     page * pageSize
   );
 
+  const { notifPermissionStatus } = useNotification();
+
   return (
     <main className="max-w-lg mx-auto py-10 px-4 relative">
+      <div className={`transition-all duration-300 ease-in-out ${notifPermissionStatus !== null && notifPermissionStatus !== "granted" ? 'mb-6 opacity-100 max-h-40' : 'mb-0 opacity-0 max-h-0 pointer-events-none overflow-hidden'}`}>
+        {notifPermissionStatus !== null && notifPermissionStatus !== "granted" && (
+          <Alert variant="destructive">
+            <AlertDescription>
+              Please allow notification permission in your browser to receive push notifications.
+            </AlertDescription>
+          </Alert>
+        )}
+      </div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold tracking-tight">
           Notifications
@@ -227,7 +269,7 @@ export default function NotificationsPage() {
       <Button
         className="sticky bottom-6 right-6 float-right z-50 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center cursor-pointer"
         onClick={() => {
-          toast.success("Test notification triggered!");
+          sendNotifMutation.mutate();
         }}
         aria-label="Test Notification"
       >
