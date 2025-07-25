@@ -24,7 +24,7 @@ export function LoginForm({
 
   const loginMutation = useMutation({
     mutationFn: async ({ username, password }: { username: string; password: string }) => {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/sign-in`, {
+      const res = await fetch(`/api/auth/sign-in`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

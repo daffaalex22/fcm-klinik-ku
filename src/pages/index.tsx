@@ -34,7 +34,7 @@ export default function Home() {
               size="lg"
               onClick={() => router.push(isLoggedIn ? "/notifications" : "/login")}
             >
-              {isLoggedIn ? "See notifications" : "Login to your account"}
+              See notifications
             </Button>
           </CardContent>
         </Card>

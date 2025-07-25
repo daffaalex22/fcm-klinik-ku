@@ -40,7 +40,7 @@ function NotificationsUI() {
       const params = new URLSearchParams({ page: "1", limit: "100" });
       const token = localStorage.getItem("accessToken");
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/notification?${params}`,
+        `/api/notification?${params}`,
         {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         }
@@ -55,7 +55,7 @@ function NotificationsUI() {
     mutationFn: async (notificationId: string) => {
       const token = localStorage.getItem("accessToken");
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/notification/mark-read/${notificationId}`,
+        `/api/notification/mark-read/${notificationId}`,
         {
           method: "PATCH",
           headers: token ? { Authorization: `Bearer ${token}` } : {},
@@ -77,7 +77,7 @@ function NotificationsUI() {
     mutationFn: async () => {
       const token = localStorage.getItem("accessToken");
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/notification/send`,
+        `/api/notification/send`,
         {
           method: "POST",
           headers: {
