@@ -20,6 +20,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from "next/router";
 import { NotificationUIProvider, useNotificationUI } from "@/context/NotificationUIContext";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
+import Navbar from "@/components/Navbar";
 
 interface Notification {
   id: string;
@@ -136,6 +137,8 @@ function NotificationsUI() {
   }, []);
 
   return (
+    <>
+      <Navbar />
     <main className="max-w-lg mx-auto py-10 px-4 relative">
       <div className={`transition-all duration-300 ease-in-out ${notifPermissionStatus !== null && notifPermissionStatus !== "granted" ? 'mb-6 opacity-100 max-h-40' : 'mb-0 opacity-0 max-h-0 pointer-events-none overflow-hidden'}`}>
         {notifPermissionStatus !== null && notifPermissionStatus !== "granted" && (
@@ -326,6 +329,7 @@ function NotificationsUI() {
         <Megaphone size={28} />
       </Button>
     </main>
+    </>
   );
 }
 
