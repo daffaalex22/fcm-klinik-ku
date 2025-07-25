@@ -11,9 +11,14 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-background border-b flex items-center justify-between px-4 py-5 shadow-sm italic">
-      <span className="font-extrabold text-3xl tracking-wide">Notify</span>
-      <Button variant="outline" onClick={handleLogout} className="ml-auto">
+    <nav className="sticky top-0 z-50 bg-background border-b flex items-center justify-between px-4 md:px-20 lg:px-64 py-5 shadow-sm">
+      <span
+        className="font-extrabold text-3xl tracking-wide cursor-pointer hover:opacity-80 italic"
+        onClick={() => router.push("/")}
+      >
+        Notify
+      </span>
+      <Button variant="outline" onClick={handleLogout} className="ml-auto hover:cursor-pointer">
         Logout
       </Button>
     </nav>

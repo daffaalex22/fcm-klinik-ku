@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 
 export default function Home() {
   const router = useRouter();
+  const isLoggedIn = typeof window !== "undefined" && localStorage.getItem("accessToken");
   return (
     <div
       className={`${geistSans.className} ${geistMono.className} font-sans flex min-h-screen w-full items-center justify-center p-6 md:p-10`}
@@ -28,7 +29,13 @@ export default function Home() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Button className="w-full mt-4 cursor-pointer" size="lg" onClick={() => router.push("/login")}>Login to your account</Button>
+            <Button
+              className="w-full mt-4 cursor-pointer"
+              size="lg"
+              onClick={() => router.push(isLoggedIn ? "/notifications" : "/login")}
+            >
+              {isLoggedIn ? "See notifications" : "Login to your account"}
+            </Button>
           </CardContent>
         </Card>
       </div>
