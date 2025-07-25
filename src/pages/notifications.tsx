@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useNotification from "@/hooks/use-notification";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from "next/router";
+import { NotificationUIProvider, useNotificationUI } from "@/context/NotificationUIContext";
 
 interface Notification {
   id: string;
@@ -28,7 +29,7 @@ interface Notification {
   // Other fields
 }
 
-export default function NotificationsPage() {
+function NotificationsUI() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data, isLoading, isError } = useQuery({
@@ -95,14 +96,17 @@ export default function NotificationsPage() {
     },
   });
 
-  const notifications = data || [];
-  const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState<null | typeof notifications[number]>(
-    null
-  );
-  const [showUnreadOnly, setShowUnreadOnly] = useState(false);
-  const [page, setPage] = useState(1);
-  const pageSize = 5;
+  const notifications: Notification[] = data || [];
+  const {
+    open,
+    setOpen,
+    selected,
+    setSelected,
+    showUnreadOnly,
+    setShowUnreadOnly,
+    page,
+    setPage,
+  } = useNotificationUI();
 
   const sortedNotifications = notifications
     .slice()
@@ -114,10 +118,10 @@ export default function NotificationsPage() {
   const filteredNotifications: Notification[] = showUnreadOnly
     ? sortedNotifications.filter((n: Notification) => !n.isRead)
     : sortedNotifications;
-  const pageCount = Math.ceil(filteredNotifications.length / pageSize);
+  const pageCount = Math.ceil(filteredNotifications.length / 5);
   const paginatedNotifications = filteredNotifications.slice(
-    (page - 1) * pageSize,
-    page * pageSize
+    (page - 1) * 5,
+    page * 5
   );
 
   const { notifPermissionStatus } = useNotification();
@@ -154,7 +158,7 @@ export default function NotificationsPage() {
       </div>
       <ul className="space-y-2">
         {isLoading
-          ? Array.from({ length: pageSize }).map((_, i) => (
+          ? Array.from({ length: 5 }).map((_, i) => (
             <React.Fragment key={i}>
               <li>
                 <Card className="bg-background border-none shadow-none px-0 py-0">
@@ -168,7 +172,7 @@ export default function NotificationsPage() {
                   </CardContent>
                 </Card>
               </li>
-              {i < pageSize - 1 && <Separator className="my-2" />}
+              {i < 5 - 1 && <Separator className="my-2" />}
             </React.Fragment>
           ))
           : paginatedNotifications.map((n, i) => (
@@ -227,7 +231,7 @@ export default function NotificationsPage() {
         <Button
           className="cursor-pointer"
           disabled={page === 1}
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          onClick={() => setPage(Math.max(1, page - 1))}
         >
           Previous
         </Button>
@@ -237,7 +241,7 @@ export default function NotificationsPage() {
         <Button
           className="cursor-pointer"
           disabled={page === pageCount || pageCount === 0}
-          onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+          onClick={() => setPage(Math.min(pageCount, page + 1))}
         >
           Next
         </Button>
@@ -281,5 +285,13 @@ export default function NotificationsPage() {
         <Megaphone size={28} />
       </Button>
     </main>
+  );
+}
+
+export default function NotificationsPage() {
+  return (
+    <NotificationUIProvider>
+      <NotificationsUI />
+    </NotificationUIProvider>
   );
 }
