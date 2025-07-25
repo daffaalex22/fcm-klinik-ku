@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { Megaphone } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Notification {
   id: string;
@@ -69,31 +70,45 @@ export default function NotificationsPage() {
 
   return (
     <main className="max-w-lg mx-auto py-10 px-4 relative">
-      {isLoading && <div>Loading notifications...</div>}
-      {isError && <div>Failed to load notifications.</div>}
-      {!isLoading && !isError && (
-        <>
-          <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Notifications
-            </h1>
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor="unread-only"
-                className="text-sm select-none cursor-pointer"
-              >
-                Unread only
-              </label>
-              <Switch
-                className="hover:cursor-pointer"
-                id="unread-only"
-                checked={showUnreadOnly}
-                onCheckedChange={setShowUnreadOnly}
-              />
-            </div>
-          </div>
-          <ul className="space-y-2">
-            {paginatedNotifications.map((n, i) => (
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight">
+          Notifications
+        </h1>
+        <div className="flex items-center gap-2">
+          <label
+            htmlFor="unread-only"
+            className="text-sm select-none cursor-pointer"
+          >
+            Unread only
+          </label>
+          <Switch
+            className="hover:cursor-pointer"
+            id="unread-only"
+            checked={showUnreadOnly}
+            onCheckedChange={setShowUnreadOnly}
+          />
+        </div>
+      </div>
+      <ul className="space-y-2">
+        {isLoading
+          ? Array.from({ length: pageSize }).map((_, i) => (
+            <React.Fragment key={i}>
+              <li>
+                <Card className="bg-background border-none shadow-none px-0 py-0">
+                  <CardContent className="flex flex-col gap-1 px-4 py-3">
+                    <div className="flex items-center justify-between">
+                      <Skeleton className="h-5 w-32" />
+                      <Skeleton className="h-4 w-10" />
+                    </div>
+                    <Skeleton className="h-4 w-full mt-2" />
+                    <Skeleton className="h-3 w-24 mt-2" />
+                  </CardContent>
+                </Card>
+              </li>
+              {i < pageSize - 1 && <Separator className="my-2" />}
+            </React.Fragment>
+          ))
+          : paginatedNotifications.map((n, i) => (
               <React.Fragment key={n.id}>
                 <li>
                   <button
@@ -139,62 +154,60 @@ export default function NotificationsPage() {
                 {i < notifications.length - 1 && <Separator className="my-2" />}
               </React.Fragment>
             ))}
-          </ul>
-          {/* Pagination Controls */}
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <Button
-              className="cursor-pointer"
-              disabled={page === 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
-              Previous
-            </Button>
-            <span className="text-sm text-muted-foreground">
-              Page {page} of {pageCount}
-            </span>
-            <Button
-              className="cursor-pointer"
-              disabled={page === pageCount || pageCount === 0}
-              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-            >
-              Next
-            </Button>
+      </ul>
+      {/* Pagination Controls */}
+      <div className="flex items-center justify-center gap-4 mt-6">
+        <Button
+          className="cursor-pointer"
+          disabled={page === 1}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+        >
+          Previous
+        </Button>
+        <span className="text-sm text-muted-foreground">
+          Page {page} of {pageCount || 1}
+        </span>
+        <Button
+          className="cursor-pointer"
+          disabled={page === pageCount || pageCount === 0}
+          onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+        >
+          Next
+        </Button>
+      </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {selected?.title || "Notification Details"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-2">
+            <p className="mb-4">
+              {selected?.body ||
+                "This is a dummy dialog. You can put more details here."}
+            </p>
+            <div className="flex justify-end">
+              <Button
+                className="mt-2 cursor-pointer"
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </Button>
+            </div>
           </div>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  {selected?.title || "Notification Details"}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="py-2">
-                <p className="mb-4">
-                  {selected?.body ||
-                    "This is a dummy dialog. You can put more details here."}
-                </p>
-                <div className="flex justify-end">
-                  <Button
-                    className="mt-2 cursor-pointer"
-                    onClick={() => setOpen(false)}
-                  >
-                    Close
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-          {/* Floating Test Notif Button */}
-          <Button
-            className="sticky bottom-6 right-6 float-right z-50 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center cursor-pointer"
-            onClick={() => {
-              toast.success("Test notification triggered!");
-            }}
-            aria-label="Test Notification"
-          >
-            <Megaphone size={28} />
-          </Button>
-        </>
-      )}
+        </DialogContent>
+      </Dialog>
+      {/* Floating Test Notif Button */}
+      <Button
+        className="sticky bottom-6 right-6 float-right z-50 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center cursor-pointer"
+        onClick={() => {
+          toast.success("Test notification triggered!");
+        }}
+        aria-label="Test Notification"
+      >
+        <Megaphone size={28} />
+      </Button>
     </main>
   );
 }
