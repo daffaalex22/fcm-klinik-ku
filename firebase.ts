@@ -41,9 +41,8 @@ const fetchToken = async () => {
 
 const saveFcmToken = async (token: string) => {
   try {
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
     const accessToken = localStorage.getItem("accessToken");
-    const res = await fetch(`${backendUrl}/fcm/save-token`, {
+    const res = await fetch(`/api/fcm/save-token`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
