@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -19,6 +19,7 @@ import useNotification from "@/hooks/use-notification";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from "next/router";
 import { NotificationUIProvider, useNotificationUI } from "@/context/NotificationUIContext";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 interface Notification {
   id: string;
@@ -125,6 +126,14 @@ function NotificationsUI() {
   );
 
   const { notifPermissionStatus } = useNotification();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   return (
     <main className="max-w-lg mx-auto py-10 px-4 relative">
@@ -246,34 +255,66 @@ function NotificationsUI() {
           Next
         </Button>
       </div>
-      <Dialog open={open} onOpenChange={(open) => {
-        setOpen(open);
-        if (!open) {
-          router.push("/notifications");
-        }
-      }}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
-              {selected?.title || "Notification Details"}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="py-2">
-            <p className="mb-4">
-              {selected?.body ||
-                "This is a dummy dialog. You can put more details here."}
-            </p>
-            <div className="flex justify-end">
-              <Button
-                className="mt-2 cursor-pointer"
-                onClick={() => setOpen(false)}
-              >
-                Close
-              </Button>
+      {/* Dialog/Drawer for Notification Details */}
+      {isMobile ? (
+        <Drawer open={open} onOpenChange={(open) => {
+          setOpen(open);
+          if (!open) {
+            router.push("/notifications");
+          }
+        }}>
+          <DrawerContent className="px-4 py-4">
+            <DrawerHeader>
+              <DrawerTitle>
+                {selected?.title || "Notification Details"}
+              </DrawerTitle>
+            </DrawerHeader>
+            <div className="py-2">
+              <p className="mb-4">
+                {selected?.body ||
+                  "This is a dummy dialog. You can put more details here."}
+              </p>
+              <div className="flex justify-end">
+                <Button
+                  className="mt-2 cursor-pointer"
+                  onClick={() => setOpen(false)}
+                >
+                  Close
+                </Button>
+              </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+          <Dialog open={open} onOpenChange={(open) => {
+            setOpen(open);
+            if (!open) {
+              router.push("/notifications");
+            }
+          }}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {selected?.title || "Notification Details"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="py-2">
+                <p className="mb-4">
+                  {selected?.body ||
+                    "This is a dummy dialog. You can put more details here."}
+                </p>
+                <div className="flex justify-end">
+                  <Button
+                    className="mt-2 cursor-pointer"
+                    onClick={() => setOpen(false)}
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+      )}
       {/* Floating Test Notif Button */}
       <Button
         className="sticky bottom-6 right-6 float-right z-50 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center cursor-pointer"
