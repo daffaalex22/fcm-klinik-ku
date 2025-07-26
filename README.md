@@ -1,6 +1,44 @@
 # 🏥 Klinik Ku - FCM
 
-A modern web application for Klinik Ku, providing seamless clinic management and patient interaction features. Built for efficiency and ease of use.
+This is a technical test submission for FCM integration for the Klinik Ku application process.
+
+## 📑 Contents
+- [Requirements Checklist](#-technical-test-requirements-checklist)
+- [Extra Features](#-extra-features)
+- [Tech Stack](#-tech-stack)
+- [Live URL](#-live-url)
+- [Test Credentials](#-test-credentials)
+- [Backend API Route](#-backend-api-route)
+- [How to Run This Project](#️-how-to-run-this-project)
+
+## ✅ Requirements Checklist
+
+| Requirement                                                      | Status   | Notes                                                                 |
+|------------------------------------------------------------------|----------|-----------------------------------------------------------------------|
+| Next.js with TypeScript                                          | ✅       | Next.js in tech stack; TypeScript used                                |
+| Official Firebase SDK                                            | ✅       | Firebase in tech stack, .env for config                               |
+| State Management (any)                                           | ✅       | React Query & React Context                                           |
+| Minimalist, modern, responsive UI                                | ✅       | Tailwind CSS, shadcn/ui                                               |
+| FCM Integration (init, permission, send token to backend)         | ✅       | FCM config in .env, backend sync implemented                          |
+| Notification List (fetch, display, pagination, read/unread style) | ✅       | Implemented in codebase                                               |
+| Mark as Read (update local and backend)                          | ✅       | Implemented in codebase                                               |
+| .env for sensitive config                                        | ✅       | .env.local setup instructions                                         |
+| Clear folder/component structure                                 | ✅       | Implemented in codebase                                               |
+| Clean code, short README                                         | ✅       | README is concise                                                     |
+| Deployment (optional)                                            | ✅       | Live URL: https://fcm-klinik-ku.vercel.app/                           |
+
+## ✨ Extra Features
+
+### Testing
+- 🔑 "Use test credential" button on login form for quick demo access.
+- ➕ Floating action button to trigger a test notification.
+### Others
+- 🔔 Toast notifications for user feedback (success, error, info).
+- 📣 Foreground & background push notification handling with native Notification and in-app toast.
+- 📱 Client-side filtering for "Unread only".
+- 🗂️ Notification details shown in a dialog/drawer.
+- 🪝 Custom hooks (e.g., useIsMobile, useNotification) for enhanced UX and code organization.
+- 🧩 Modern UI components (dropdown, badge, button, etc.) with [shadcn/ui](https://ui.shadcn.com/) and [Lucide icons](https://lucide.dev/).
 
 ## 🚀 Tech Stack
 
@@ -33,7 +71,7 @@ http://173.249.59.138/api
 
 Enjoy exploring the app! ✨
 
-## Getting Started
+## 🛠️ How to Run This Project
 
 1. Create a `.env.local` file in the project root and add the following environment variables:
 
