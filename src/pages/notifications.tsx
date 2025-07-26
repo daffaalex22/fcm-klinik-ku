@@ -309,7 +309,10 @@ function NotificationsUI() {
                 <div className="flex justify-end">
                   <Button
                     className="mt-2 cursor-pointer"
-                    onClick={() => setOpen(false)}
+                      onClick={() => {
+                        setOpen(false)
+                        router.push("/notifications");
+                      }}
                   >
                     Close
                   </Button>
