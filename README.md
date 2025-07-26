@@ -33,12 +33,12 @@ This is a technical test submission for FCM integration for the Klinik Ku applic
 - 🔑 "Use test credential" button on login form for quick demo access.
 - ➕ Floating action button to trigger a test notification.
 ### Others
+- 🌓 Theme toggle (dark mode) implementation.
 - 🔔 Toast notifications for user feedback (success, error, info).
 - 📣 Foreground & background push notification handling with native Notification and in-app toast.
 - 📱 Client-side filtering for "Unread only".
 - 🗂️ Notification details shown in a dialog/drawer.
 - 🪝 Custom hooks (e.g., useIsMobile, useNotification) for enhanced UX and code organization.
-- 🧩 Modern UI components (dropdown, badge, button, etc.) with [shadcn/ui](https://ui.shadcn.com/) and [Lucide icons](https://lucide.dev/).
 
 ## 🚀 Tech Stack
 
