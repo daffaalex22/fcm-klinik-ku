@@ -55,7 +55,7 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications, isLo
         ? Array.from({ length: 5 }).map((_, i) => (
             <React.Fragment key={i}>
               <li>
-                <Card className="bg-background border-none shadow-none px-0 py-0">
+              <Card className="bg-white dark:bg-neutral-900 border-none shadow-none px-0 py-0">
                   <CardContent className="flex flex-col gap-1 px-4 py-3">
                     <div className="flex items-center justify-between">
                       <Skeleton className="h-5 w-32" />
@@ -85,7 +85,7 @@ const NotificationList: React.FC<NotificationListProps> = ({ notifications, isLo
                 >
                   <Card
                     className={cn(
-                      "bg-background border-none shadow-none px-0 py-0  transition hover:bg-accent hover:shadow",
+                      "bg-white dark:bg-neutral-900 border-none shadow-none px-0 py-0 transition hover:bg-accent hover:shadow",
                       n.isRead ? "opacity-60" : ""
                     )}
                   >

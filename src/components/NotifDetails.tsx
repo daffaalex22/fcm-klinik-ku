@@ -19,9 +19,9 @@ const NotifDetails: React.FC = () => {
           router.push("/notifications");
         }
       }}>
-        <DrawerContent className="px-4 py-4">
+        <DrawerContent className="px-4 py-4 bg-white dark:bg-neutral-900">
           <DrawerHeader>
-            <DrawerTitle>
+            <DrawerTitle className="text-black dark:text-white">
               {selected?.title || "Notification Details"}
             </DrawerTitle>
           </DrawerHeader>
@@ -50,7 +50,7 @@ const NotifDetails: React.FC = () => {
         router.push("/notifications");
       }
     }}>
-      <DialogContent>
+      <DialogContent className="bg-white dark:bg-neutral-900">
         <DialogHeader>
           <DialogTitle>
             {selected?.title || "Notification Details"}
