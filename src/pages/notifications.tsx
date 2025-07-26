@@ -21,6 +21,7 @@ import { useRouter } from "next/router";
 import { NotificationUIProvider, useNotificationUI } from "@/context/NotificationUIContext";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import Navbar from "@/components/Navbar";
+import NotifDetails from "@/components/NotifDetails";
 
 interface Notification {
   id: string;
@@ -262,68 +263,13 @@ function NotificationsUI() {
         </Button>
       </div>
       {/* Dialog/Drawer for Notification Details */}
-      {isMobile ? (
-        <Drawer open={open} onOpenChange={(open) => {
-          setOpen(open);
-          if (!open) {
-            router.push("/notifications");
-          }
-        }}>
-          <DrawerContent className="px-4 py-4">
-            <DrawerHeader>
-              <DrawerTitle>
-                {selected?.title || "Notification Details"}
-              </DrawerTitle>
-            </DrawerHeader>
-            <div className="py-2">
-              <p className="mb-4">
-                {selected?.body ||
-                  "This is a dummy dialog. You can put more details here."}
-              </p>
-              <div className="flex justify-end">
-                <Button
-                  className="mt-2 cursor-pointer"
-                  onClick={() => setOpen(false)}
-                >
-                  Close
-                </Button>
-              </div>
-            </div>
-          </DrawerContent>
-        </Drawer>
-      ) : (
-          <Dialog open={open} onOpenChange={(open) => {
-            setOpen(open);
-            if (!open) {
-              router.push("/notifications");
-            }
-          }}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>
-                  {selected?.title || "Notification Details"}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="py-2">
-                <p className="mb-4">
-                  {selected?.body ||
-                    "This is a dummy dialog. You can put more details here."}
-                </p>
-                <div className="flex justify-end">
-                  <Button
-                    className="mt-2 cursor-pointer"
-                      onClick={() => {
-                        setOpen(false)
-                        router.push("/notifications");
-                      }}
-                  >
-                    Close
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-      )}
+        <NotifDetails
+          isMobile={isMobile}
+          open={open}
+          setOpen={setOpen}
+          selected={selected}
+          router={router}
+        />
       {/* Floating Test Notif Button */}
       <Button
         className="sticky bottom-6 right-6 float-right z-50 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center cursor-pointer"
