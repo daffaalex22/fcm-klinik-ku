@@ -96,6 +96,9 @@ function NotificationsUI() {
     onError: () => {
       toast.error("Failed to send notification");
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notifications", { page: 1, limit: 100 }] });
+    },
   });
 
   const notifications: Notification[] = data || [];
