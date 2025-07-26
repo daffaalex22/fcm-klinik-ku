@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Megaphone } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Skeleton } from "@/components/ui/skeleton";
 import useNotification from "@/hooks/use-notification";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { NotificationUIProvider, useNotificationUI } from "@/context/NotificationUIContext";
 import Navbar from "@/components/Navbar";
 import NotifDetails from "@/components/NotifDetails";
 import NotificationList from "@/components/NotificationList";
+import { useRouter } from "next/router";
 
 interface Notification {
   id: string;
@@ -34,6 +24,7 @@ interface Notification {
 function NotificationsUI() {
   const queryClient = useQueryClient();
   const { notifPermissionStatus } = useNotification();
+  const router = useRouter();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notifications", { page: 1, limit: 100 }],
@@ -88,6 +79,15 @@ function NotificationsUI() {
     setPage,
   } = useNotificationUI();
 
+  // Sync page state with query param on mount
+  useEffect(() => {
+    const pageParam = parseInt(router.query.page as string);
+    if (!isNaN(pageParam) && pageParam > 0 && pageParam !== page) {
+      setPage(pageParam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.query.page]);
+
   const notifications: Notification[] = data || [];
   const sortedNotifications = notifications
     .slice()
@@ -132,8 +132,7 @@ function NotificationsUI() {
             onCheckedChange={setShowUnreadOnly}
           />
         </div>
-      </div>
-        {/* Notification List */}
+        </div>
         <NotificationList
           notifications={filteredNotifications}
           isLoading={isLoading}
@@ -143,7 +142,14 @@ function NotificationsUI() {
         <Button
           className="cursor-pointer"
           disabled={page === 1}
-          onClick={() => setPage(Math.max(1, page - 1))}
+            onClick={() => {
+              const newPage = Math.max(1, page - 1);
+              setPage(newPage);
+              router.push({
+                pathname: router.pathname,
+                query: { ...router.query, page: newPage },
+              }, undefined, { shallow: true });
+            }}
         >
           Previous
         </Button>
@@ -153,7 +159,14 @@ function NotificationsUI() {
         <Button
           className="cursor-pointer"
           disabled={page === pageCount || pageCount === 0}
-          onClick={() => setPage(Math.min(pageCount, page + 1))}
+            onClick={() => {
+              const newPage = Math.min(pageCount, page + 1);
+              setPage(newPage);
+              router.push({
+                pathname: router.pathname,
+                query: { ...router.query, page: newPage },
+              }, undefined, { shallow: true });
+            }}
         >
           Next
         </Button>
