@@ -2,16 +2,15 @@ import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import { useNotificationUI } from "@/context/NotificationUIContext";
+import { useRouter } from "next/router";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
-interface NotifDetailsProps {
-  isMobile: boolean;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  selected: { title?: string; body?: string } | null;
-  router: import("next/router").NextRouter;
-}
+const NotifDetails: React.FC = () => {
+  const { open, setOpen, selected } = useNotificationUI();
+  const router = useRouter();
+  const isMobile = useIsMobile();
 
-const NotifDetails: React.FC<NotifDetailsProps> = ({ isMobile, open, setOpen, selected, router }) => {
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={(open) => {

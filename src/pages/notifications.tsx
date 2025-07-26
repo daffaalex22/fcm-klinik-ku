@@ -131,14 +131,6 @@ function NotificationsUI() {
   );
 
   const { notifPermissionStatus } = useNotification();
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth <= 640);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   return (
     <>
@@ -172,6 +164,7 @@ function NotificationsUI() {
           />
         </div>
       </div>
+        {/* Notification List */}
       <ul className="space-y-2">
         {isLoading
           ? Array.from({ length: 5 }).map((_, i) => (
@@ -263,13 +256,7 @@ function NotificationsUI() {
         </Button>
       </div>
       {/* Dialog/Drawer for Notification Details */}
-        <NotifDetails
-          isMobile={isMobile}
-          open={open}
-          setOpen={setOpen}
-          selected={selected}
-          router={router}
-        />
+        <NotifDetails />
       {/* Floating Test Notif Button */}
       <Button
         className="sticky bottom-6 right-6 float-right z-50 shadow-lg rounded-full w-12 h-12 p-0 flex items-center justify-center cursor-pointer"
